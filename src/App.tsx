@@ -7,7 +7,7 @@ import { useToasts } from "./hooks/useToasts";
 import type { AppStatus, ProcessedImage } from "./types/qr";
 import { copyPreviewImage } from "./utils/copyPreviewImage";
 import { processImageBlob } from "./utils/image";
-import { decodeQrFromBlob, downloadDataUrl, generateQrDataUrl } from "./utils/qr";
+import { decodeQrFromBlob, generateQrDataUrl } from "./utils/qr";
 
 function App() {
   const previewPanelRef = useRef<HTMLDivElement>(null);
@@ -104,15 +104,6 @@ function App() {
     [pushToast],
   );
 
-  const downloadQr = useCallback(() => {
-    if (!generatedQrUrl) {
-      return;
-    }
-
-    downloadDataUrl(generatedQrUrl, "qr-rewire-generated.png");
-    pushToast("Generated QR downloaded.", "success");
-  }, [generatedQrUrl, pushToast]);
-
   const copyImage = useCallback(async () => {
     if (!generatedQrUrl || !previewPanelRef.current) {
       return;
@@ -158,9 +149,6 @@ function App() {
           <div className="flex w-full flex-col justify-center rounded-md border border-white/10 bg-white/[0.055] p-4 lg:w-80">
             <h3 className="text-sm font-semibold uppercase tracking-[0.16em] text-slate-400">Actions</h3>
             <div className="mt-4 grid gap-3">
-              <ActionButton type="button" onClick={downloadQr} disabled={!canDownload}>
-                Download QR
-              </ActionButton>
               <ActionButton type="button" onClick={copyImage} disabled={!canDownload}>
                 Copy Image
               </ActionButton>
