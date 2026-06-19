@@ -40,18 +40,12 @@ export const PreviewPanel = forwardRef<HTMLDivElement, PreviewPanelProps>(functi
               className="mt-2 leading-6 text-slate-300"
               style={{
                 fontSize: "16px",
+                fontFamily: '"Math Sans Italic", sans-serif',
+                fontStyle: "italic",
               }}
             >
-              Please Scan the QR code with your Bank/E-wallet to Finish the Connection. By connecting, you agree to comply with our guidelines and policies as outlined in the documentation.
-            </p>
-            <p
-              className="mt-2 italic leading-6 text-red-500"
-              style={{
-                fontSize: "13px",
-              }}
-            >
-              **If you encounter any request asking for your OTP, please do not provide it and report the incident immediately.**
-            </p>
+              To complete the connection process, please scan the QR code using your Bank or E-wallet application. By continuing, you confirm that you have read, understood, and agreed to the terms, guidelines, and policies provided in the documentation.</p>
+            
           </div>
         </div>
         <div className="relative grid h-[245px] w-[245px] shrink-0 place-items-center overflow-hidden rounded bg-white">
