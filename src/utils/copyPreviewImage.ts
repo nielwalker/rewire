@@ -23,6 +23,27 @@ function drawCoverImage(
   context.drawImage(image, x, y, drawWidth, drawHeight);
 }
 
+function drawCircleImage(
+  context: CanvasRenderingContext2D,
+  image: HTMLImageElement,
+  centerX: number,
+  centerY: number,
+  size: number,
+) {
+  const radius = size / 2;
+  const imageRatio = image.naturalWidth / image.naturalHeight;
+  const sourceSize = imageRatio > 1 ? image.naturalHeight : image.naturalWidth;
+  const sourceX = (image.naturalWidth - sourceSize) / 2;
+  const sourceY = (image.naturalHeight - sourceSize) / 2;
+
+  context.save();
+  context.beginPath();
+  context.arc(centerX, centerY, radius, 0, Math.PI * 2);
+  context.clip();
+  context.drawImage(image, sourceX, sourceY, sourceSize, sourceSize, centerX - radius, centerY - radius, size, size);
+  context.restore();
+}
+
 function wrapText(context: CanvasRenderingContext2D, text: string, maxWidth: number): string[] {
   const words = text.split(" ");
   const lines: string[] = [];
@@ -106,7 +127,8 @@ export async function copyPreviewImage(element: HTMLDivElement): Promise<void> {
   context.scale(scale, scale);
 
   const background = await loadImage("/dc.png");
-  const qrImage = element.querySelector("img");
+  const logo = await loadImage("/dc-logo.jpg");
+  const qrImage = element.querySelector<HTMLImageElement>("[data-qr-image='true']");
   const qr = qrImage?.src ? await loadImage(qrImage.src) : null;
   const paragraphs = Array.from(element.querySelectorAll("p"));
   const [title, description, warning] = paragraphs.map((paragraph) => paragraph.textContent?.trim() || "");
@@ -128,6 +150,17 @@ export async function copyPreviewImage(element: HTMLDivElement): Promise<void> {
 
   if (qr) {
     context.drawImage(qr, qrX, qrY, qrSize, qrSize);
+
+    const logoSize = 45;
+    const logoPadding = 3;
+    const logoX = qrX + qrSize / 2;
+    const logoY = qrY + qrSize / 2;
+
+    context.fillStyle = "#ffffff";
+    context.beginPath();
+    context.arc(logoX, logoY, logoSize / 2, 0, Math.PI * 2);
+    context.fill();
+    drawCircleImage(context, logo, logoX, logoY, logoSize - logoPadding * 2);
   }
 
   context.textBaseline = "top";

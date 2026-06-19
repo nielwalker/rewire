@@ -13,7 +13,7 @@ export async function decodeQrFromBlob(blob: Blob): Promise<string | null> {
 
 export async function generateQrDataUrl(payload: string): Promise<string> {
   return QRCode.toDataURL(payload, {
-    errorCorrectionLevel: "M",
+    errorCorrectionLevel: "H",
     margin: 2,
     scale: 8,
     color: {

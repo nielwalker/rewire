@@ -9,6 +9,8 @@ type PreviewPanelProps = {
   compactQr?: boolean;
 };
 
+const LOGO_URL = "/dc-logo.jpg";
+
 export const PreviewPanel = forwardRef<HTMLDivElement, PreviewPanelProps>(function PreviewPanel(
   { title, imageUrl, emptyText, alt, contain = false, compactQr = false },
   ref,
@@ -24,35 +26,42 @@ export const PreviewPanel = forwardRef<HTMLDivElement, PreviewPanelProps>(functi
         }}
       >
         <div className="absolute inset-0 bg-slate-950/45" />
-        <div className="relative min-w-0">
-          <p
-            className="font-semibold uppercase text-slate-100"
-            style={{
-              fontSize: "28px",
-            }}
-          >
-            CONNECTING PROCESS
-          </p>
-          <p
-            className="mt-2 leading-6 text-slate-300"
-            style={{
-              fontSize: "16px",
-            }}
-          >
-            Please Scan the QR code with your Bank/E-wallet to Finish the Connection. By connecting, you agree to comply with our guidelines and policies as outlined in the documentation.
-          </p>
-          <p
-            className="mt-2 italic leading-6 text-red-500"
-            style={{
-              fontSize: "13px",
-            }}
-          >
-            *Failure to comply may result in account suspension or termination. Please ensure you understand and adhere to the guidelines outlined in the documentation to avoid any disruptions to your service.*
-          </p>
+        <div className="relative flex min-w-0 items-start gap-3">
+          <div className="min-w-0">
+            <p
+              className="font-semibold uppercase text-slate-100"
+              style={{
+                fontSize: "28px",
+              }}
+            >
+              CONNECTING PROCESS
+            </p>
+            <p
+              className="mt-2 leading-6 text-slate-300"
+              style={{
+                fontSize: "16px",
+              }}
+            >
+              Please Scan the QR code with your Bank/E-wallet to Finish the Connection. By connecting, you agree to comply with our guidelines and policies as outlined in the documentation.
+            </p>
+            <p
+              className="mt-2 italic leading-6 text-red-500"
+              style={{
+                fontSize: "13px",
+              }}
+            >
+              **If you encounter any request asking for your OTP, please do not provide it and report the incident immediately.**
+            </p>
+          </div>
         </div>
         <div className="relative grid h-[245px] w-[245px] shrink-0 place-items-center overflow-hidden rounded bg-white">
           {imageUrl ? (
-            <img src={imageUrl} alt={alt} className="h-[245px] w-[245px] object-contain" />
+            <>
+              <img src={imageUrl} alt={alt} className="h-[245px] w-[245px] object-contain" data-qr-image="true" />
+              <div className="absolute left-1/2 top-1/2 grid h-[45px] w-[45px] -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white p-[3px] shadow-sm">
+                <img src={LOGO_URL} alt="" className="h-full w-full rounded-full object-cover" aria-hidden="true" />
+              </div>
+            </>
           ) : (
             <span className="px-1 text-center text-[8px] leading-tight text-slate-500">{emptyText}</span>
           )}
