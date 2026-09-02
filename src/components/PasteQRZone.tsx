@@ -13,13 +13,14 @@ export function PasteQRZone({ disabled = false, onImage, onReject }: PasteQRZone
         return;
       }
 
-      const imageItem = Array.from(event.clipboardData.items).find((item) =>
-        item.type.startsWith("image/"),
-      );
+      const items = Array.from(event.clipboardData.items);
+      const imageItem =
+        items.find((item) => item.kind === "file" && item.type.startsWith("image/")) ??
+        items.find((item) => item.kind === "file");
 
       if (!imageItem) {
         if (event.clipboardData.items.length > 0) {
-          onReject("Paste a PNG or JPEG image. Text, PDFs, and other formats are not supported.");
+          onReject("No image was found in the clipboard. Copy the QR image or take a screenshot, then paste it.");
         }
         return;
       }
@@ -47,16 +48,15 @@ export function PasteQRZone({ disabled = false, onImage, onReject }: PasteQRZone
         return;
       }
 
-      const file = Array.from(event.dataTransfer?.files ?? []).find((item) =>
-        item.type.startsWith("image/"),
-      );
+      const files = Array.from(event.dataTransfer?.files ?? []);
+      const file = files.find((item) => item.type.startsWith("image/")) ?? files[0];
 
       if (file) {
         onImage(file);
         return;
       }
 
-      onReject("Drop a PNG or JPEG image. File picker uploads are intentionally not used.");
+      onReject("No image file was found in the dropped content.");
     };
 
     window.addEventListener("dragover", handleDragOver);

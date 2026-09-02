@@ -1,19 +1,21 @@
 import type { ProcessedImage } from "../types/qr";
 
-const ACCEPTED_IMAGE_TYPES = new Set(["image/png", "image/jpeg", "image/jpg"]);
 const MAX_WIDTH = 1600;
-const JPEG_QUALITY = 0.9;
-
-export function isAcceptedImage(type: string): boolean {
-  return ACCEPTED_IMAGE_TYPES.has(type.toLowerCase());
-}
 
 export async function processImageBlob(file: Blob): Promise<ProcessedImage> {
-  if (!isAcceptedImage(file.type)) {
-    throw new Error("Unsupported image format. Paste or drop a PNG or JPEG image.");
+  let bitmap: ImageBitmap;
+  try {
+    bitmap = await createImageBitmap(file);
+  } catch {
+    throw new Error(
+      "This image format cannot be decoded by your browser. Try copying the QR as an image or screenshot.",
+    );
   }
 
-  const bitmap = await createImageBitmap(file);
+  if (bitmap.width === 0 || bitmap.height === 0) {
+    bitmap.close();
+    throw new Error("The pasted image is empty or invalid.");
+  }
   const scale = Math.min(1, MAX_WIDTH / bitmap.width);
   const width = Math.max(1, Math.round(bitmap.width * scale));
   const height = Math.max(1, Math.round(bitmap.height * scale));
@@ -42,8 +44,7 @@ export async function processImageBlob(file: Blob): Promise<ProcessedImage> {
         }
         reject(new Error("Unable to prepare this image for QR decoding."));
       },
-      "image/jpeg",
-      JPEG_QUALITY,
+      "image/png",
     );
   });
 
