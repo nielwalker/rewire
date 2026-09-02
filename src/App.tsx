@@ -156,9 +156,6 @@ function App() {
                 Clear
               </ActionButton>
             </div>
-            <p className="mt-4 text-xs leading-5 text-slate-500">
-              Esc clears the current image and QR output.
-            </p>
           </div>
         </section>
       </div>
