@@ -15,7 +15,7 @@ export async function generateQrDataUrl(payload: string): Promise<string> {
   return QRCode.toDataURL(payload, {
     errorCorrectionLevel: "H",
     margin: 2,
-    scale: 8,
+    width: 2048,
     color: {
       dark: "#0f172a",
       light: "#ffffff",

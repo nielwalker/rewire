@@ -7,6 +7,9 @@ function loadImage(src: string): Promise<HTMLImageElement> {
   });
 }
 
+const MIN_COPY_WIDTH = 1920;
+const MIN_COPY_SCALE = 3;
+
 function drawCoverImage(
   context: CanvasRenderingContext2D,
   image: HTMLImageElement,
@@ -114,7 +117,9 @@ export async function copyPreviewImage(element: HTMLDivElement): Promise<void> {
   const rect = element.getBoundingClientRect();
   const width = Math.round(rect.width);
   const height = Math.round(rect.height);
-  const scale = Math.max(window.devicePixelRatio || 1, 3);
+  // Guarantee a Full HD-width clipboard image even when the responsive preview
+  // is narrow, while retaining extra detail on high-density displays.
+  const scale = Math.max(window.devicePixelRatio || 1, MIN_COPY_SCALE, MIN_COPY_WIDTH / width);
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d");
 
@@ -149,7 +154,10 @@ export async function copyPreviewImage(element: HTMLDivElement): Promise<void> {
   context.fillRect(qrX, qrY, qrSize, qrSize);
 
   if (qr) {
+    context.save();
+    context.imageSmoothingEnabled = false;
     context.drawImage(qr, qrX, qrY, qrSize, qrSize);
+    context.restore();
 
     const logoSize = 45;
     const logoPadding = 3;

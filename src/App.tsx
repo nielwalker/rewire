@@ -111,7 +111,7 @@ function App() {
 
     try {
       await copyPreviewImage(previewPanelRef.current);
-      pushToast("Preview image copied.", "success");
+      pushToast("HD preview image copied.", "success");
     } catch (caught) {
       const message = caught instanceof Error ? caught.message : "Unable to copy preview image.";
       pushToast(message, "error");
